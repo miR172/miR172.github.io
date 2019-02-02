@@ -4,9 +4,12 @@
     <meta name="google-signin-client_id" content="85071281697-7jorblfr8bvvi7d4nppigrs2d3mr4t8i.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
   </head>
-  <body>
-    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+  <body onload="checkSignedIn()">
+    <div id="login" class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <div id="home">this is home page</div>
     <script>
+      const ID_TOKEN = "id_token";
+
       function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
         var profile = googleUser.getBasicProfile();
@@ -20,7 +23,30 @@
         // The ID token you need to pass to your backend:
         var id_token = googleUser.getAuthResponse().id_token;
         console.log("ID Token: " + id_token);
+        window.localStorage.setItem(ID_TOKEN, id_token);
+        toHomePage();
       }
+
+      function checkSignedIn() {
+        var id_token = window.localStorage.getItem(ID_TOKEN);
+        console.log("id token from local storage: " + id_token);
+        if (id_token != null) {
+          toHomePage();  
+        } else {
+          toLoginPage();
+        }
+      }
+
+      function toHomePage() {
+        document.getElementById("home").style.display = "block";
+        document.getElementById("login").style.display = "none";
+      }
+
+      function toLoginPage() {
+        document.getElementById("home").style.display = "none";
+        document.getElementById("login").style.display = "block";
+      }
+
     </script>
   </body>
 </html>
